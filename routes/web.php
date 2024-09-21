@@ -20,7 +20,10 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/form', [FormController::class, 'showForm'])->middleware('auth')->name('form.show');
-Route::post('/form', [FormController::class, 'submitForm'])->name('form.submit');
+// Ruta para mostrar el formulario de creación
+Route::get('/form', [FormController::class, 'create'])->name('form.create');
+
+// Ruta para manejar el envío del formulario
+Route::post('/form', [FormController::class, 'store'])->name('form.store');
 
 require __DIR__.'/auth.php';
