@@ -8,9 +8,12 @@
 </head>
 <body class="d-flex align-items-center justify-content-center" style="height: 100vh; background-color: #f8f9fa;">
     <div class="container">
-    <h1 class="text-center mb-4">Actividad 2 Seguridad Web</h1>
+        <h1 class="text-center mb-4">Actividad 2 Seguridad Web</h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
                 <div class="card">
                     <div class="card-header text-center">
                         <h4>Iniciar Sesión</h4>
@@ -20,11 +23,11 @@
                             @csrf
                             <div class="form-group">
                                 <label for="email">Correo Electrónico</label>
-                                <input type="email" class="form-control" name="email" required>
+                                <input type="email" id="email" class="form-control" name="email" required>
                             </div>
                             <div class="form-group">
                                 <label for="password">Contraseña</label>
-                                <input type="password" class="form-control" name="password" required>
+                                <input type="password" id="password" class="form-control" name="password" required>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
                         </form>
@@ -43,15 +46,15 @@
                             @csrf
                             <div class="form-group">
                                 <label for="name">Nombre</label>
-                                <input type="text" class="form-control" name="name" required>
+                                <input type="text" id="name" class="form-control" name="name" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Correo Electrónico</label>
-                                <input type="email" class="form-control" name="email" required>
+                                <input type="email" id="email" class="form-control" name="email" required>
                             </div>
                             <div class="form-group">
                                 <label for="password">Contraseña</label>
-                                <input type="password" class="form-control" name="password" required>
+                                <input type="password" id="password" class="form-control" name="password" required>
                             </div>
                             <button type="submit" class="btn btn-success btn-block">Registrarse</button>
                         </form>
@@ -65,5 +68,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
 
 

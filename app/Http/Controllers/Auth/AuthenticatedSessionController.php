@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
         $user->blocked_until = null;
         $user->save();
 
-        return redirect()->route('form.show');
+        return redirect()->route('form.create');
     } else {
         // Incrementar intentos fallidos
         $user->failed_login_attempts++;
