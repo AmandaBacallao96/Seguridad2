@@ -20,6 +20,9 @@ class User extends Authenticatable
         'apellidos',
         'dni',
         'email',
+        'telefono',
+        'pais',
+        'sobre_ti',
         'password',
     ];
 

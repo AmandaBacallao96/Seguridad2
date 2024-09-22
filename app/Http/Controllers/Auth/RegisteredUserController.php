@@ -30,6 +30,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Registrar el inicio de la solicitud de registro
+        Log::info('Iniciando proceso de registro de usuario', ['request_data' => $request->all()]);
+
         // Validar los datos ingresados
         $validatedData = $request->validate([
             'name' => [
@@ -37,14 +40,14 @@ class RegisteredUserController extends Controller
                 'string',
                 'min:2',
                 'max:20',
-                'regex:/^[a-zA-ZÀ-ÿ\s]+$/u' // No admite números, solo letras y espacios
+                'regex:/^[a-zA-ZÀ-ÿ\s]+$/u' // Solo letras y espacios
             ],
             'apellidos' => [
                 'required',
                 'string',
                 'min:2',
                 'max:40',
-                'regex:/^[a-zA-ZÀ-ÿ\s]+$/u' // No admite números, solo letras y espacios
+                'regex:/^[a-zA-ZÀ-ÿ\s]+$/u' // Solo letras y espacios
             ],
             'dni' => [
                 'required',
@@ -60,11 +63,26 @@ class RegisteredUserController extends Controller
             ],
             'password' => [
                 'required',
-                'confirmed',
-                'min:10', // Longitud mínima
+                'confirmed', // Contraseña repetida (confirmación)
+                'min:10',
                 'regex:/[A-Za-z]/', // Al menos una letra
                 'regex:/[0-9]/', // Al menos un número
                 'regex:/[!@#$%^&*(),.?":{}|<>]/', // Al menos un carácter especial
+            ],
+            'telefono' => [
+                'nullable', // Campo opcional
+                'regex:/^\+?\d{9,12}$/', // Permite números con un máximo de 12 dígitos, opcionalmente con el prefijo +
+            ],
+            'pais' => [
+                'nullable', // Campo opcional
+                'string',
+                'max:100'
+            ],
+            'sobre_ti' => [
+                'nullable', // Campo opcional
+                'string',
+                'min:20',
+                'max:250',
             ],
         ]);
 
@@ -76,6 +94,9 @@ class RegisteredUserController extends Controller
                 'dni' => $request->dni,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'telefono' => $request->telefono,
+                'pais' => $request->pais,
+                'sobre_ti' => $request->sobre_ti,
             ]);
 
             // Registrar al usuario

@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('apellidos', 40); // Nuevo campo de apellidos
-            $table->string('dni', 9)->unique(); // Nuevo campo de DNI (8 dígitos y 1 letra)
+            $table->string('apellidos', 40);
+            $table->string('dni', 9)->unique();
             $table->string('email')->unique();
+            $table->string('telefono', 12)->nullable();
+            $table->string('pais')->nullable();
+            $table->text('sobre_ti')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

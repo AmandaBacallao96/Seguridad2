@@ -61,22 +61,22 @@
                             @csrf
                             <div class="form-group">
                                 <label for="name">Nombre</label>
-                                <input type="text" id="name" class="form-control" name="name" required>
+                                <input type="text" id="name" class="form-control" name="name" value="{{ old('name') }}" required>
                             </div>
                             <div class="form-group">
                                 <label for="apellidos">Apellidos</label>
-                                <input type="text" id="apellidos" class="form-control" name="apellidos" required>
+                                <input type="text" id="apellidos" class="form-control" name="apellidos" value="{{ old('apellidos') }}" required>
                             </div>
                             <div class="form-group">
                                 <label for="dni">DNI</label>
-                                <input type="text" id="dni" class="form-control" name="dni" required>
+                                <input type="text" id="dni" class="form-control" name="dni" value="{{ old('dni') }}" required>
                                 <small class="form-text text-muted">
                                     Formato: 8 dígitos seguidos de una letra (EJ: 12345678L)
                                 </small>
                             </div>
                             <div class="form-group">
                                 <label for="register_email">Correo Electrónico</label>
-                                <input type="email" id="register_email" class="form-control" name="email" required>
+                                <input type="email" id="register_email" class="form-control" name="email" value="{{ old('email') }}" required>
                             </div>
                             <div class="form-group">
                                 <label for="register_password">Contraseña</label>
@@ -89,6 +89,33 @@
                                 <label for="password_confirmation">Confirmar Contraseña</label>
                                 <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" required>
                             </div>
+
+                            <!-- Campo Teléfono (Opcional) -->
+                            <div class="form-group">
+                                <label for="telefono">Teléfono (Opcional)</label>
+                                <input type="text" id="telefono" class="form-control" name="telefono" value="{{ old('telefono') }}" placeholder="+34912345678">
+                                <small class="form-text text-muted">Formato: Solo números y el símbolo "+" para prefijos.</small>
+                            </div>
+
+                            <!-- Campo País (Opcional) -->
+                            <div class="form-group">
+                                <label for="pais">País (Opcional)</label>
+                                <select id="pais" class="form-control" name="pais">
+                                    <option value="" selected>Selecciona tu país</option>
+                                    <option value="España" {{ old('pais') == 'España' ? 'selected' : '' }}>España</option>
+                                    <option value="México" {{ old('pais') == 'México' ? 'selected' : '' }}>México</option>
+                                    <option value="Argentina" {{ old('pais') == 'Argentina' ? 'selected' : '' }}>Argentina</option>
+                                    <!-- Agrega más países según lo necesario -->
+                                </select>
+                            </div>
+
+                            <!-- Campo Sobre Ti (Opcional) -->
+                            <div class="form-group">
+                                <label for="sobre_ti">Sobre ti (Opcional)</label>
+                                <textarea id="sobre_ti" class="form-control" name="sobre_ti" rows="4" placeholder="Escribe algo sobre ti...">{{ old('sobre_ti') }}</textarea>
+                                <small class="form-text text-muted">Mínimo 20 caracteres, máximo 250 caracteres.</small>
+                            </div>
+
                             <button type="submit" class="btn btn-success btn-block">Registrarse</button>
                         </form>
                     </div>
