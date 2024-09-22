@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión / Registro</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="d-flex align-items-center justify-content-center" style="height: 100vh; background-color: #f8f9fa;">
     <div class="container">
         <h1 class="text-center mb-4">Actividad 2 Seguridad Web</h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 @if (session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
+                <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
+
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                <!-- Formulario de Inicio de Sesión -->
                 <div class="card">
                     <div class="card-header text-center">
                         <h4>Iniciar Sesión</h4>
@@ -22,12 +36,12 @@
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
                             <div class="form-group">
-                                <label for="email">Correo Electrónico</label>
-                                <input type="email" id="email" class="form-control" name="email" required>
+                                <label for="email_login">Correo Electrónico</label>
+                                <input type="email" id="email_login" class="form-control" name="email" required>
                             </div>
                             <div class="form-group">
-                                <label for="password">Contraseña</label>
-                                <input type="password" id="password" class="form-control" name="password" required>
+                                <label for="password_login">Contraseña</label>
+                                <input type="password" id="password_login" class="form-control" name="password" required>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
                         </form>
@@ -37,6 +51,7 @@
                     </div>
                 </div>
 
+                <!-- Formulario de Registro -->
                 <div class="card mt-4 collapse" id="registro">
                     <div class="card-header text-center">
                         <h4>Registro</h4>
@@ -49,12 +64,19 @@
                                 <input type="text" id="name" class="form-control" name="name" required>
                             </div>
                             <div class="form-group">
-                                <label for="email">Correo Electrónico</label>
-                                <input type="email" id="email" class="form-control" name="email" required>
+                                <label for="register_email">Correo Electrónico</label>
+                                <input type="email" id="register_email" class="form-control" name="email" required>
                             </div>
                             <div class="form-group">
-                                <label for="password">Contraseña</label>
-                                <input type="password" id="password" class="form-control" name="password" required>
+                                <label for="register_password">Contraseña</label>
+                                <input type="password" id="register_password" class="form-control" name="password" required>
+                                <small class="form-text text-muted">
+                                    La contraseña debe tener al menos 10 caracteres, incluir una letra, un número y un carácter especial (!@#$%^&*).
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                <label for="password_confirmation">Confirmar Contraseña</label>
+                                <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" required>
                             </div>
                             <button type="submit" class="btn btn-success btn-block">Registrarse</button>
                         </form>
@@ -67,7 +89,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
-
-
-

@@ -9,9 +9,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log; // Añadimos la clase Log para usar el sistema de logs
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Validator;
 
 class RegisteredUserController extends Controller
 {
@@ -29,37 +29,53 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-{
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => [
-            'required', 
-            'string', 
-            'lowercase', 
-            'email', 
-            'max:255', 
-            'unique:'.User::class
-        ],
-        'password' => [
-            'required', 
-            'confirmed',
-            'min:10', // Longitud mínima
-            'regex:/[A-Za-z]/', // Al menos una letra
-            'regex:/[0-9]/', // Al menos un número
-            'regex:/[!@#$%^&*(),.?":{}|<>]/', // Al menos un carácter especial
-        ],
-    ]);
+    {
+        // Registrar el inicio de la solicitud de registro
+        Log::info('Iniciando proceso de registro de usuario', ['request_data' => $request->all()]);
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-    ]);
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:users,email' // Cambié la validación unique
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                'min:10', // Longitud mínima
+                'regex:/[A-Za-z]/', // Al menos una letra
+                'regex:/[0-9]/', // Al menos un número
+                'regex:/[!@#$%^&*(),.?":{}|<>]/', // Al menos un carácter especial
+            ],
+        ]);
 
-    event(new Registered($user));
+        // Registrar los datos validados
+        Log::info('Datos validados correctamente', ['validated_data' => $validatedData]);
 
-    Auth::login($user);
+        try {
+            // Intentamos crear el usuario
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-    return redirect()->route('form.show');
-}
+            // Si el usuario es creado, registramos la operación en el log
+            Log::info('Usuario creado correctamente', ['user_id' => $user->id]);
+        } catch (\Exception $e) {
+            // Si ocurre algún error, lo registramos en el log
+            Log::error('Error al crear el usuario', ['error_message' => $e->getMessage()]);
+            return back()->withErrors(['error' => 'Error al crear el usuario. Por favor, inténtelo de nuevo.']);
+        }
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect()->route('form.create');
+    }
 }

@@ -1,0 +1,66 @@
+services:
+    app:
+        image: php:8.2-fpm
+        container_name: laravel_app
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+        networks:
+            - laravel
+        depends_on:
+            - db
+            - redis
+            - selenium
+
+    webserver:
+        image: nginx:alpine
+        container_name: laravel_web
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d:/etc/nginx/conf.d
+        ports:
+            - "8000:80"
+        networks:
+            - laravel
+        depends_on:
+            - app
+
+    db:
+        image: mysql:5.7
+        container_name: laravel_db
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: laravel
+            MYSQL_USER: root
+            MYSQL_PASSWORD: 3Guridad123
+        ports:
+            - "3006:3306"
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - laravel
+
+    redis:
+        image: redis:alpine
+        container_name: redis_1
+        ports:
+            - "6379:6379"
+        networks:
+            - laravel
+
+    selenium:
+        image: selenium/standalone-chrome
+        container_name: selenium_1
+        volumes:
+            - /dev/shm:/dev/shm
+        networks:
+            - laravel
+        ports:
+            - "4444:4444"
+
+networks:
+    laravel:
+
+volumes:
+    dbdata:
