@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log; // Añadimos la clase Log para usar el sistema de logs
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -30,18 +30,33 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Registrar el inicio de la solicitud de registro
-        Log::info('Iniciando proceso de registro de usuario', ['request_data' => $request->all()]);
-
+        // Validar los datos ingresados
         $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:20',
+                'regex:/^[a-zA-ZÀ-ÿ\s]+$/u' // No admite números, solo letras y espacios
+            ],
+            'apellidos' => [
+                'required',
+                'string',
+                'min:2',
+                'max:40',
+                'regex:/^[a-zA-ZÀ-ÿ\s]+$/u' // No admite números, solo letras y espacios
+            ],
+            'dni' => [
+                'required',
+                'regex:/^\d{8}[A-Z]$/', // Valida el formato DNI español (8 números seguidos de una letra)
+                'unique:users,dni',
+            ],
             'email' => [
                 'required',
                 'string',
-                'lowercase',
                 'email',
                 'max:255',
-                'unique:users,email' // Cambié la validación unique
+                'unique:users,email'
             ],
             'password' => [
                 'required',
@@ -53,21 +68,20 @@ class RegisteredUserController extends Controller
             ],
         ]);
 
-        // Registrar los datos validados
-        Log::info('Datos validados correctamente', ['validated_data' => $validatedData]);
-
+        // Intentar crear el usuario
         try {
-            // Intentamos crear el usuario
             $user = User::create([
                 'name' => $request->name,
+                'apellidos' => $request->apellidos,
+                'dni' => $request->dni,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
-            // Si el usuario es creado, registramos la operación en el log
+            // Registrar al usuario
             Log::info('Usuario creado correctamente', ['user_id' => $user->id]);
         } catch (\Exception $e) {
-            // Si ocurre algún error, lo registramos en el log
+            // Registrar error
             Log::error('Error al crear el usuario', ['error_message' => $e->getMessage()]);
             return back()->withErrors(['error' => 'Error al crear el usuario. Por favor, inténtelo de nuevo.']);
         }

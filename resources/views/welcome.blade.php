@@ -64,6 +64,17 @@
                                 <input type="text" id="name" class="form-control" name="name" required>
                             </div>
                             <div class="form-group">
+                                <label for="apellidos">Apellidos</label>
+                                <input type="text" id="apellidos" class="form-control" name="apellidos" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dni">DNI</label>
+                                <input type="text" id="dni" class="form-control" name="dni" required>
+                                <small class="form-text text-muted">
+                                    Formato: 8 dígitos seguidos de una letra (EJ: 12345678L)
+                                </small>
+                            </div>
+                            <div class="form-group">
                                 <label for="register_email">Correo Electrónico</label>
                                 <input type="email" id="register_email" class="form-control" name="email" required>
                             </div>
